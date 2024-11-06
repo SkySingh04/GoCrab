@@ -32,27 +32,27 @@ func New() (*zap.Logger, error) {
 
 	LogCfg.OutputPaths = []string{
 		"stdout",
-		"./BharatVigil-logs.txt",
+		"./GoCrab-logs.txt",
 	}
 
-	// Check if BharatVigil-log.txt exists, if not create it.
-	_, err := os.Stat("BharatVigil-logs.txt")
+	// Check if GoCrab-log.txt exists, if not create it.
+	_, err := os.Stat("GoCrab-logs.txt")
 	if os.IsNotExist(err) {
-		_, err := os.Create("BharatVigil-logs.txt")
+		_, err := os.Create("GoCrab-logs.txt")
 		if err != nil {
 			return nil, fmt.Errorf("failed to create the log file: %v", err)
 		}
 	}
 
 	// Check if the permission of the log file is 777, if not set it to 777.
-	fileInfo, err := os.Stat("BharatVigil-logs.txt")
+	fileInfo, err := os.Stat("GoCrab-logs.txt")
 	if err != nil {
 		log.Println(Emoji, "failed to get the log file info", err)
 		return nil, fmt.Errorf("failed to get the log file info: %v", err)
 	}
 	if fileInfo.Mode().Perm() != 0777 {
 		// Set the permissions of the log file to 777.
-		err = os.Chmod("BharatVigil-logs.txt", 0777)
+		err = os.Chmod("GoCrab-logs.txt", 0777)
 		if err != nil {
 			log.Println(Emoji, "failed to set the log file permission to 777", err)
 			return nil, fmt.Errorf("failed to set the log file permission to 777: %v", err)
@@ -91,7 +91,7 @@ func AddMode(mode string) (*zap.Logger, error) {
 	// Update the time encoder with the new values
 	cfg.EncoderConfig.EncodeTime = func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 		emoji := "\U0001F4AA"
-		mode := fmt.Sprintf("BharatVigil(%s):", mode)
+		mode := fmt.Sprintf("GoCrab(%s):", mode)
 		enc.AppendString(emoji + " " + mode + " " + t.Format(time.RFC3339) + " ")
 	}
 	// Rebuild the logger with the updated configuration
