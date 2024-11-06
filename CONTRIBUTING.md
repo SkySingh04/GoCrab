@@ -1,6 +1,6 @@
-# Contributing to CargoToGo
+# Contributing to GoCrab
 
-Thank you for your interest in contributing to CargoToGo! Contributions, issues, and feature requests are welcome. This document will guide you through the contribution process.
+Thank you for your interest in contributing to GoCrab! Contributions, issues, and feature requests are welcome. This document will guide you through the contribution process.
 
 ## How to Contribute
 
@@ -9,8 +9,8 @@ Thank you for your interest in contributing to CargoToGo! Contributions, issues,
 Fork the repository to your GitHub account and clone it locally. This will create a copy of the project where you can make changes.
 
 ```sh
-git clone https://github.com/skysingh04/cargotogo.git
-cd cargotogo
+git clone https://github.com/skysingh04/GoCrab.git
+cd GoCrab
 ```
 
 ### 2. Create a Branch
@@ -27,7 +27,7 @@ Make your changes in the appropriate files. Follow the project’s coding standa
 
 ### 4. Test Your Changes
 
-Run existing tests and add new ones if needed to verify that your changes work as expected. CargoToGo uses Go’s testing framework for this purpose.
+Run existing tests and add new ones if needed to verify that your changes work as expected. GoCrab uses Go’s testing framework for this purpose.
 
 ```sh
 go test ./...
@@ -56,7 +56,7 @@ Go to the original repository and create a Pull Request. Include a description o
 
 ## Code of Conduct
 
-Please note that CargoToGo follows a Code of Conduct to foster an open and welcoming environment. By participating, you are expected to uphold this standard.
+Please note that GoCrab follows a Code of Conduct to foster an open and welcoming environment. By participating, you are expected to uphold this standard.
 
 ## Reporting Issues
 
@@ -72,4 +72,4 @@ If you encounter any bugs or have suggestions for improvements, please open an i
 
 If you have any questions about the contribution process, please feel free to reach out by opening a discussion on GitHub or contacting the maintainers.
 
-Thank you for contributing to CargoToGo!
+Thank you for contributing to GoCrab!
