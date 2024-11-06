@@ -48,6 +48,7 @@ This is where we use LLVMIR or MLIR? IDk?
 - [ ] Build the transpiler (to be elaborated)
 - [ ] Write Proper tests
 - [ ] Add Golint
+- [ ] Add one click install (via docker maybe?)
 - [ ] Have CI/CD for automated releases
 - [ ] Build a frontend to showcase the compiler
 - [ ] Write Blog
