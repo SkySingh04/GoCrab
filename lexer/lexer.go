@@ -25,10 +25,6 @@ func NewScanner(source string) *Scanner {
 	}
 }
 
-// Transpile attempts to transpile Rust code to Go code.
-// It returns a RustCodeError if the Rust code itself has issues.
-var hasError bool
-
 // scanTokensWithErrors goes through the source and generates tokens, collecting errors.
 func (s *Scanner) ScanTokens() ([]Token, []errors.RustCodeError) {
 	var errorsList []errors.RustCodeError
@@ -171,116 +167,26 @@ func (s *Scanner) scanToken() errors.RustCodeError {
 		break
 	case '\n':
 		s.line++
+	case '"':
+		err := s.scanString()
+		if err != (errors.RustCodeError{}) {
+			return err
+		}
 	default:
 		if isDigit(char) {
-			s.scanNumber()
+			err := s.scanNumber()
+			if err != (errors.RustCodeError{}) {
+				return err
+			}
 		} else if isAlpha(char) {
-			s.scanIdentifierOrKeyword()
+			err := s.scanIdentifierOrKeyword()
+			if err != (errors.RustCodeError{}) {
+				return err
+			}
 		} else {
 			// Unknown character error handling
 			return errors.RustCodeError{Message: fmt.Sprintf("Unexpected character: %c", char), LineNum: s.line}
 		}
 	}
 	return errors.RustCodeError{}
-}
-
-// match consumes the next character if it matches the expected character.
-func (s *Scanner) match(expected byte) bool {
-	if s.isAtEnd() {
-		return false
-	}
-	if s.source[s.current] != expected {
-		return false
-	}
-	s.current++
-	return true
-}
-
-// scanNumber handles integer and floating-point literals.
-func (s *Scanner) scanNumber() {
-	for isDigit(s.peek()) {
-		s.readChar()
-	}
-
-	if s.peek() == '.' && isDigit(s.peekNext()) {
-		s.readChar() // consume the '.'
-
-		for isDigit(s.peek()) {
-			s.readChar()
-		}
-		s.addToken(FloatLiteral, s.source[s.start:s.current])
-	} else {
-		s.addToken(IntegerLiteral, s.source[s.start:s.current])
-	}
-}
-
-// scanIdentifierOrKeyword handles identifiers and keywords.
-func (s *Scanner) scanIdentifierOrKeyword() {
-	// for isAlphaNumeric(s.peek()) {
-	// 	s.readChar()
-	// }
-
-	// // Check if the identifier is a reserved keyword
-	// text := s.source[s.start:s.current]
-	// tokenType := lookupKeyword(text)
-	// s.addToken(tokenType, nil)
-}
-
-// lookupKeyword determines if a lexeme is a Rust keyword.
-// func lookupKeyword(text string) RustToken {
-// 	switch text {
-// 	case "let":
-// 		return Let
-// 	case "fn":
-// 		return Fn
-// 	case "struct":
-// 		return Struct
-// 	case "enum":
-// 		return Enum
-// 	case "impl":
-// 		return Impl
-// 	case "trait":
-// 		return Trait
-// 	// Add other keywords as needed
-// 	default:
-// 		return Identifier
-// 	}
-// }
-
-// peek returns the current character without consuming it.
-func (s *Scanner) peek() byte {
-	if s.isAtEnd() {
-		return '\x00'
-	}
-	return s.source[s.current]
-}
-
-// peekNext returns the character after the current one without consuming it.
-func (s *Scanner) peekNext() byte {
-	if s.current+1 >= len(s.source) {
-		return '\x00'
-	}
-	return s.source[s.current+1]
-}
-
-// Utility functions for character classification
-func isDigit(c byte) bool        { return c >= '0' && c <= '9' }
-func isAlpha(c byte) bool        { return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' }
-func isAlphaNumeric(c byte) bool { return isAlpha(c) || isDigit(c) }
-
-// readChar consumes and returns the current character.
-func (s *Scanner) readChar() byte {
-	s.current++
-	return s.source[s.current-1]
-}
-
-// isAtEnd checks if the scanner has reached the end of the source.
-func (s *Scanner) isAtEnd() bool {
-	return s.current >= len(s.source)
-}
-
-// addToken adds a new token to the tokens slice.
-func (s *Scanner) addToken(tokenType RustToken, literal interface{}) {
-	text := s.source[s.start:s.current]
-	s.tokens = append(s.tokens, Token{tokenType, text, literal, s.line})
 }
