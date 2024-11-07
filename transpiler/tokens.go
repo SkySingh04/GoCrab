@@ -1,6 +1,31 @@
 package transpiler
 
+import "fmt"
+
 type RustToken int
+
+// Token represents a lexical token with a type, lexeme, literal, and line number.
+type Token struct {
+	Type    RustToken
+	Lexeme  string
+	Literal interface{}
+	Line    int
+}
+
+// NewToken creates and returns a new Token instance.
+func NewToken(tokenType RustToken, lexeme string, literal interface{}, line int) *Token {
+	return &Token{
+		Type:    tokenType,
+		Lexeme:  lexeme,
+		Literal: literal,
+		Line:    line,
+	}
+}
+
+// String returns a string representation of the Token.
+func (t *Token) String() string {
+	return fmt.Sprintf("%v %v %v", t.Type, t.Lexeme, t.Literal)
+}
 
 const (
 	// Keywords
@@ -82,6 +107,8 @@ const (
 	ReservedDoubleQuote
 	ReservedSingleQuote
 	ReservedPound
+
+	EOF
 )
 
 // Rust Keywords Enum
