@@ -2,7 +2,8 @@
 
 **GoCrab** is a Rust-to-Go transpiler written in Go. Why? Its my attempt to learn about compilers/transpilers, who knows I may love it?
 
-![Compilers](image.png)
+![image](https://github.com/user-attachments/assets/e40870c1-51d8-486b-a036-c52f170b7c49)
+
 > This image alone is enough to make this project sound sooooo much cooler.
 
 ```
