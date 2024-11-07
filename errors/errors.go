@@ -1,4 +1,4 @@
-package transpiler
+package errors
 
 import "fmt"
 
@@ -10,4 +10,3 @@ type RustCodeError struct {
 func (e *RustCodeError) Error() string {
 	return fmt.Sprintf("At line %d: %s", e.LineNum, e.Message)
 }
-

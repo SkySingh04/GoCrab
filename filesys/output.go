@@ -1,6 +1,7 @@
 package filesys
 
 import (
+	"GoCrab/errors"
 	"GoCrab/transpiler"
 	"os"
 	"path/filepath"
@@ -14,7 +15,7 @@ func writeTranspiledCode(rustCode string, logger *zap.Logger, inputFileName, out
 	goCode, err := transpiler.Transpile(rustCode)
 	if err != nil {
 		// Check if the error is a RustCodeError
-		if rustErr, ok := err.(*transpiler.RustCodeError); ok {
+		if rustErr, ok := err.(*errors.RustCodeError); ok {
 			logger.Error("Your Rust code has issues that prevent transpilation. Please correct it and try again.\n", zap.String("Stack Trace", rustErr.Error()))
 			os.Exit(1)
 		}

@@ -1,9 +1,9 @@
-package transpiler
+package lexer
 
-import "fmt"
-
-// Transpile attempts to transpile Rust code to Go code.
-// It returns a RustCodeError if the Rust code itself has issues.
+import (
+	"GoCrab/errors"
+	"fmt"
+)
 
 //The core of the scanner is a loop. Starting at the first character of the source code, the scanner figures out what lexeme the character belongs to, and consumes it and any following characters that are part of that lexeme.
 //When it reaches the end of that lexeme, it emits a token.
@@ -29,51 +29,25 @@ func NewScanner(source string) *Scanner {
 // It returns a RustCodeError if the Rust code itself has issues.
 var hasError bool
 
-func Transpile(code string) (string, error) {
-	if code == "" {
-		return "", &RustCodeError{Message: "Rust code is empty or invalid.", LineNum: 0}
-	}
-
-	scanner := NewScanner(code)
-	tokens, errors := scanner.scanTokens()
-	if len(errors) > 0 {
-		hasError = true
-		for _, err := range errors {
-			fmt.Println(err)
-		}
-		return "", fmt.Errorf("transpilation failed with errors")
-	}
-
-	for _, token := range tokens {
-		fmt.Println(token)
-	}
-
-	if hasError {
-		return "", fmt.Errorf("why u give bad code my dude")
-	}
-
-	return "", nil
-}
-
 // scanTokensWithErrors goes through the source and generates tokens, collecting errors.
-func (s *Scanner) scanTokens() ([]Token, []RustCodeError) {
-	var errors []RustCodeError
+func (s *Scanner) ScanTokens() ([]Token, []errors.RustCodeError) {
+	var errorsList []errors.RustCodeError
 	for !s.isAtEnd() {
 		s.start = s.current
 		err := s.scanToken()
-		if err != (RustCodeError{}) {
-			errors = append(errors, err)
+		if err != (errors.RustCodeError{}) {
+			errorsList = append(errorsList, err)
 		}
 	}
 
 	// Add final EOF token
 	s.tokens = append(s.tokens, Token{EOF, "", nil, s.line})
 
-	return s.tokens, errors
+	return s.tokens, errorsList
 }
 
 // scanToken scans a single token based on the current character.
-func (s *Scanner) scanToken() RustCodeError {
+func (s *Scanner) scanToken() errors.RustCodeError {
 	char := s.readChar()
 	switch char {
 	// Single-character tokens
@@ -204,10 +178,10 @@ func (s *Scanner) scanToken() RustCodeError {
 			s.scanIdentifierOrKeyword()
 		} else {
 			// Unknown character error handling
-			return RustCodeError{Message: fmt.Sprintf("Unexpected character: %c", char), LineNum: s.line}
+			return errors.RustCodeError{Message: fmt.Sprintf("Unexpected character: %c", char), LineNum: s.line}
 		}
 	}
-	return RustCodeError{}
+	return errors.RustCodeError{}
 }
 
 // match consumes the next character if it matches the expected character.
