@@ -24,6 +24,25 @@ Either way, you then run that resulting code through the output language’s exi
 A scanner (or lexer) takes in the linear stream of characters and chunks them together into a series of something more akin to “words”. In programming languages, each of these words is called a token. 
 ```
 
+Here in our lexer package, we have a loop that runs through the entire code and tokenizes the code based on whether it is an identifier, a keyword, a string, a number etc.
+
+The output for the following rust code :
+```rust
+fn main() {
+    let x = 10;
+    let y = 20.5;
+    let z = x + y - 3 * (5 / 2) % 2;
+    let a = !x && y || z;
+    let c = x > y && y <= z || x == 10;
+    let result = if x != y { "unequal" } else { "equal" };
+    let complex = (x << 2) + (y >> 1) - (a ^ c);
+}
+```
+is 
+![alt text](image.png)
+
+Very Cool!
+
 #### Step 2 : Parsing
 
 
