@@ -54,6 +54,15 @@ Very Cool!
 #### Step 4 : Intermediate Representation
 
 This is where we use LLVMIR or MLIR? IDk?
+##### Words of a wise man that alas i do not know the meaning of: 
+I’d probably do an AST dump and then just do 1:1 substitutions for the language constructs wherever possible 
+You can pick version 1 of the language and ignore everything outside the core language
+I dont think you need to reach the llvm ir at all. LLVM IR is very low level (close to assembly), so you will lose information about loops and other programming constructs, so if you attempt to “unparse” backwards from LLVMIR to source, your go code will end up looking very different from the rust source you began with.
+It would be better to just transform one AST to the other AST and then “walk” the AST to get the final transpiled source. ASTs have far more source information so you will end up with something closer to the source rust program
+Only trouble might be that I don’t know what kind of AST rust compilers produce, and how easy it is to manipulate
+Some compilers have immutable ASTs
+I think llvm has a rust and go frontend so maybe those two would work?
+
 
 
 ## Expected Features
