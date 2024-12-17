@@ -62,6 +62,14 @@ It would be better to just transform one AST to the other AST and then “walk�
 Only trouble might be that I don’t know what kind of AST rust compilers produce, and how easy it is to manipulate
 Some compilers have immutable ASTs
 I think llvm has a rust and go frontend so maybe those two would work?
+##### Words of another wise man that alas i also do not know the meaning of: 
+https://typeset.io/papers/reverse-compilation-techniques-123dy58xi2
+Might find this useful
+Source to source compilation is a pretty hard problem to tackle, because programming patterns don't carry very well across languages
+You will only ever be able to transpile trivial code, since anything beyond that will make significant use of stdlib/language intrinsics that cannot be directly replicated
+E.g. async/await with an executor in Rust mapping to goroutines
+Literally my day job lmao, I do not recommend doing it 😂
+Pain in the ass
 
 
 
