@@ -114,6 +114,36 @@ GoCrab path/to/rust/file.rs
 
 This command will generate a `.go` file with equivalent Go code in the same directory.
 
+### Usage (Docker)
+
+If you prefer to use Docker to run **GoCrab**, you can pull the latest image from Docker Hub and use it to transpile Rust code to Go. 
+
+#### Pull the Docker Image
+To get the latest **GoCrab** image from Docker Hub, run the following command:
+
+```sh
+docker pull SkySingh04/gocrab:latest
+```
+
+#### Run the Transpiler
+You can use the Docker container to transpile your Rust files. Mount the directory containing your Rust file and specify the file as an argument:
+
+```sh
+docker run --rm -v $(pwd):/app SkySingh04/gocrab:latest /app/path/to/rust/file.rs
+```
+
+This will generate the transpiled `.go` file in the same directory as your Rust file.
+
+#### Example
+If you have a Rust file `example.rs` in your current directory, you can transpile it as follows:
+
+```sh
+docker run --rm -v $(pwd):/app SkySingh04/gocrab:latest /app/example.rs
+```
+
+The output file `example.go` will be created in the same directory.
+
+---
 
 
 ## Contributing

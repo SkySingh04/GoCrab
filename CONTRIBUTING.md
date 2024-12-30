@@ -54,6 +54,22 @@ git push origin feature/amazing-feature
 
 Go to the original repository and create a Pull Request. Include a description of your changes, the reason behind them, and any additional context that may help the maintainers review your contribution.
 
+#### Docker Image
+If you're actively contributing to **GoCrab** and want to build and test the Docker image locally, use the following commands:
+
+1. **Build the Docker Image**:
+   ```sh
+   docker build -t gocrab .
+   ```
+
+2. **Run the Local Docker Image**:
+   ```sh
+   docker run --rm -v $(pwd):/app gocrab /app/path/to/rust/file.rs
+   ```
+
+With Docker, **GoCrab** provides a simple and portable way to transpile Rust to Go without needing to install Go locally.
+
+
 ## Code of Conduct
 
 Please note that GoCrab follows a Code of Conduct to foster an open and welcoming environment. By participating, you are expected to uphold this standard.
