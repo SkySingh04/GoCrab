@@ -4,6 +4,8 @@ on:
   workflow_run:
     workflows:
       - Lint Test Build 
+    branches:
+      - master
     types:
       - completed 
 jobs:
