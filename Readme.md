@@ -86,7 +86,7 @@ Pain in the ass
 - [ ] Write Proper tests
 - [ ] Add Golint
 - [ ] Add one click install (via docker maybe?)
-- [ ] Have CI/CD for automated releases
+- [x] Have CI/CD for automated releases
 - [ ] Build a frontend to showcase the compiler
 - [ ] Write Blog
 

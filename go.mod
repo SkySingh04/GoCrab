@@ -1,6 +1,6 @@
 module GoCrab
 
-go 1.21.5
+go 1.21
 
 require go.uber.org/zap v1.27.0
 
