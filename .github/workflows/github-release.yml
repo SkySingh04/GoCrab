@@ -1,19 +1,17 @@
-name: Github Release
+name: GitHub Release
 
 on:
-    workflow_run:
-      workflows:
-        - Lint Test Build 
-      branches:
-        - master
-      types:
-        - completed 
+  workflow_run:
+    workflows:
+      - Lint Test Build
+    branches:
+      - master
+    types:
+      - completed
 
 jobs:
-  release:
-    name: Release to GitHub
+  publish:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -21,60 +19,23 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: 1.19 
+          go-version: '1.19'
 
-      - name: Cache Go modules
-        uses: actions/cache@v3
-        with:
-          path: ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-
-      - name: Install dependencies
-        run: go mod download
-
-      - name: Build binary
+      - name: Build binaries
         run: |
           mkdir -p dist
           GOOS=linux GOARCH=amd64 go build -o dist/GoCrab-linux-amd64 .
           GOOS=darwin GOARCH=amd64 go build -o dist/GoCrab-darwin-amd64 .
           GOOS=windows GOARCH=amd64 go build -o dist/GoCrab-windows-amd64.exe .
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: "GoCrab ${{ github.ref_name }}"
-          body: |
-            Automated release for GoCrab version ${{ github.ref_name }}.
-            Includes pre-built binaries for Linux, macOS, and Windows.
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload Release Assets
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/GoCrab-linux-amd64
-          asset_name: GoCrab-linux-amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload macOS Binary
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/GoCrab-darwin-amd64
-          asset_name: GoCrab-darwin-amd64
-          asset_content_type: application/octet-stream
-
-      - name: Upload Windows Binary
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/GoCrab-windows-amd64.exe
-          asset_name: GoCrab-windows-amd64.exe
-          asset_content_type: application/octet-stream
+      - name: Build and push Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/gocrab:latest .
+          docker push ghcr.io/${{ github.repository }}/gocrab:latest
