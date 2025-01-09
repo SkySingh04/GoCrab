@@ -45,6 +45,23 @@ Very Cool!
 
 #### Step 2 : Parsing
 
+Initially, based on a the following limited grammer , we will build an AST:
+```
+expression     → literal
+               | unary
+               | binary
+               | grouping ;
+
+literal        → NUMBER | STRING | "true" | "false" | "nil" ;
+grouping       → "(" expression ")" ;
+unary          → ( "-" | "!" ) expression ;
+binary         → expression operator expression ;
+operator       → "==" | "!=" | "<" | "<=" | ">" | ">="
+               | "+"  | "-"  | "*" | "/" ;
+```
+
+
+
 
 #### Step 3 : Static Analysis
 
