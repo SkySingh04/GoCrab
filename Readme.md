@@ -60,7 +60,8 @@ operator       → "==" | "!=" | "<" | "<=" | ">" | ">="
                | "+"  | "-"  | "*" | "/" ;
 ```
 
-
+We can run the script to autogenerate the ast's with `go run .\scripts\main.go` , which will generate the trees in `expr.go` package.
+Similarly , we can run the pretty printer with ` go run .\printer\main.go` , to show a basic AST output of `(* (- 123) (group 45.67))`
 
 
 #### Step 3 : Static Analysis

@@ -1,7 +1,7 @@
 // package temporarily must be set to main to run this script
-// package scripts
+package scripts
 
-package main
+// package main
 
 import (
 	"fmt"
@@ -20,10 +20,6 @@ func main() {
 }
 
 func defineAst(outputDir string, baseName string, types []string) {
-	if err := os.MkdirAll(outputDir, 0755); err != nil {
-		fmt.Fprintf(os.Stderr, "Could not create directory: %v\n", err)
-		os.Exit(1)
-	}
 	path := fmt.Sprintf("%s/%s.go", outputDir, strings.ToLower(baseName))
 	file, err := os.Create(path)
 	if err != nil {
@@ -44,6 +40,9 @@ func defineAst(outputDir string, baseName string, types []string) {
 	file.WriteString(fmt.Sprintf("\tAccept(visitor %sVisitor) interface{}\n", baseName))
 	file.WriteString("}\n\n")
 
+	// Write the visitor interface.
+	defineVisitor(file, baseName, types)
+
 	// Write each subclass.
 	for _, typeDef := range types {
 		parts := strings.Split(typeDef, ":")
@@ -51,9 +50,19 @@ func defineAst(outputDir string, baseName string, types []string) {
 		fields := strings.TrimSpace(parts[1])
 		defineType(file, baseName, className, fields)
 	}
+}
 
+func defineVisitor(file *os.File, baseName string, types []string) {
 	// Write the visitor interface.
-	defineVisitor(file, baseName, types)
+	file.WriteString(fmt.Sprintf("// %sVisitor is the visitor interface for %s types.\n", baseName, baseName))
+	file.WriteString(fmt.Sprintf("type %sVisitor interface {\n", baseName))
+
+	for _, typeDef := range types {
+		className := strings.TrimSpace(strings.Split(typeDef, ":")[0])
+		file.WriteString(fmt.Sprintf("\tVisit%s%s(*%s) interface{}\n", className, baseName, className))
+	}
+
+	file.WriteString("}\n\n")
 }
 
 func defineType(file *os.File, baseName, className, fieldList string) {
@@ -76,17 +85,4 @@ func defineType(file *os.File, baseName, className, fieldList string) {
 	file.WriteString(fmt.Sprintf("func (e *%s) Accept(visitor %sVisitor) interface{} {\n", className, baseName))
 	file.WriteString(fmt.Sprintf("\treturn visitor.Visit%s%s(e)\n", className, baseName))
 	file.WriteString("}\n\n")
-}
-
-func defineVisitor(file *os.File, baseName string, types []string) {
-	// Write the visitor interface.
-	file.WriteString(fmt.Sprintf("// %sVisitor is the visitor interface for %s types.\n", baseName, baseName))
-	file.WriteString(fmt.Sprintf("type %sVisitor interface {\n", baseName))
-
-	for _, typeDef := range types {
-		className := strings.TrimSpace(strings.Split(typeDef, ":")[0])
-		file.WriteString(fmt.Sprintf("\tVisit%s%s(*%s) interface{}\n", className, baseName, className))
-	}
-
-	file.WriteString("}\n")
 }

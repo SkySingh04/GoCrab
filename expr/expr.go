@@ -9,6 +9,14 @@ type Expr interface {
 	Accept(visitor ExprVisitor) interface{}
 }
 
+// ExprVisitor is the visitor interface for Expr types.
+type ExprVisitor interface {
+	VisitBinaryExpr(*Binary) interface{}
+	VisitGroupingExpr(*Grouping) interface{}
+	VisitLiteralExpr(*Literal) interface{}
+	VisitUnaryExpr(*Unary) interface{}
+}
+
 // Binary represents the Binary expression type.
 type Binary struct {
 	Left Expr
@@ -52,10 +60,3 @@ func (e *Unary) Accept(visitor ExprVisitor) interface{} {
 	return visitor.VisitUnaryExpr(e)
 }
 
-// ExprVisitor is the visitor interface for Expr types.
-type ExprVisitor interface {
-	VisitBinaryExpr(*Binary) interface{}
-	VisitGroupingExpr(*Grouping) interface{}
-	VisitLiteralExpr(*Literal) interface{}
-	VisitUnaryExpr(*Unary) interface{}
-}
