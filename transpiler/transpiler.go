@@ -5,7 +5,6 @@ import (
 	"GoCrab/lexer"
 	"GoCrab/parser"
 	"fmt"
-
 )
 
 var hasError bool
